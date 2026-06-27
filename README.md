@@ -3,8 +3,7 @@
 Welcome! DS2EP is a D3D9 proxy DLL for Dungeon Siege 2 that intercepts the
 game's graphics calls and lets you enhance or modify rendering without touching
 the game's executable. This guide explains how to write your own plugin.
-Do not worry if having code to look at makes it easier, Antialising & View Dist-
-ance plugins are both included and can be gone through to learn from.
+Do not worry if having code to look at makes it easier, Antialising & View Distance plugins are both included and can be gone through to learn from.
 
 ---
 
