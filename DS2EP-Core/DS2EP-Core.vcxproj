@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A1B2C3D4-0001-0001-0001-000000000001}</ProjectGuid>
+    <RootNamespace>DS2EP-Core</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <!-- Output as d3d9.dll directly into the DS2 game folder.
+       Adjust GameDir to your actual Dungeon Siege 2 install path. -->
+  <PropertyGroup>
+    <GameDir>E:\SteamLibrary\steamapps\common\Dungeon Siege 2\</GameDir>
+    <OutDir Condition="'$(Configuration)'=='Release'">$(GameDir)</OutDir>
+    <OutDir Condition="'$(Configuration)'=='Debug'">$(ProjectDir)bin\Debug\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
+    <TargetName>d3d9</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <!-- ── Debug ──────────────────────────────────────────────────────────────── -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)imgui;$(SolutionDir)DS2EP-SDK;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <ModuleDefinitionFile>proxy.def</ModuleDefinitionFile>
+      <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <Version>
+      </Version>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- ── Release ────────────────────────────────────────────────────────────── -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)imgui;$(SolutionDir)DS2EP-SDK;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <ModuleDefinitionFile>proxy.def</ModuleDefinitionFile>
+      <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- ── Source files ───────────────────────────────────────────────────────── -->
+  <ItemGroup>
+    <!-- Core proxy entry point -->
+    <ClCompile Include="dllmain.cpp" />
+    <!-- ImGui — compiled once into the core DLL.
+         Plugin DLLs share this context via ImGui::SetCurrentContext().
+         Do NOT compile imgui.cpp into plugin DLLs. -->
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
+  </ItemGroup>
+  <!-- ── Header files (for IDE browsing — not compiled) ─────────────────────── -->
+  <ItemGroup>
+    <ClInclude Include="ProxyDirect3D9.h" />
+    <ClInclude Include="ProxyDirect3DDevice9.h" />
+    <ClInclude Include="Overlay.h" />
+    <ClInclude Include="DS2EPPlugin.h" />
+    <ClInclude Include="PluginSystem.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_dx9.h" />
+    <ClInclude Include="imgui\imgui_impl_win32.h" />
+  </ItemGroup>
+  <!-- ── Linker definition ──────────────────────────────────────────────────── -->
+  <ItemGroup>
+    <None Include="proxy.def" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
